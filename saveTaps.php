@@ -1,15 +1,24 @@
 <?php
 
+// 🔹 Firebase project details
 $project_id = "clicklogs-project-adb";
+$api_key = "AIzaSyA0BDyqvbDWf37srcfMSISWPzT1HAn9vSw";
 
+// 🔹 Get POST data
 $session_id = $_POST['id'];
 $device = $_POST['var'];
 $taps = $_POST['taps'];
 
+// 🔹 Decode tap data
 $tapArray = json_decode($taps);
 
-$api_key = "AIzaSyA0BDyqvbDWf37srcfMSISWPzT1HAn9vSw";
+// 🔹 Firestore collection URL
+$url = "https://firestore.googleapis.com/v1/projects/$project_id/databases/(default)/documents/tap_logs?key=$api_key";
 
+// 🔹 Current timestamp
+$timestamp = time();
+
+// 🔹 Loop through taps
 foreach ($tapArray as $tapData) {
 
     $tapSequence = $tapData->tapSequenceNumber;
@@ -19,21 +28,21 @@ foreach ($tapArray as $tapData) {
 
     $duration = $endTime - $startTime;
 
-    $url = "https://firestore.googleapis.com/v1/projects/$project_id/databases/(default)/documents/tap_logs?key=$api_key";
-
+    // 🔹 Firestore format
     $data = [
         "fields" => [
             "session_id" => ["stringValue" => $session_id],
             "device" => ["stringValue" => $device],
-            "tap_sequence" => ["integerValue" => $tapSequence],
-            "start_time" => ["integerValue" => $startTime],
-            "end_time" => ["integerValue" => $endTime],
-            "duration" => ["integerValue" => $duration],
+            "tap_sequence" => ["integerValue" => (string)$tapSequence],
+            "start_time" => ["integerValue" => (string)$startTime],
+            "end_time" => ["integerValue" => (string)$endTime],
+            "duration" => ["integerValue" => (string)$duration],
             "interface" => ["stringValue" => $interface],
-            "timestamp" => ["integerValue" => $timestamp]
+            "timestamp" => ["integerValue" => (string)$timestamp]
         ]
     ];
 
+    // 🔹 Send request
     $ch = curl_init($url);
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -43,6 +52,7 @@ foreach ($tapArray as $tapData) {
 
     $response = curl_exec($ch);
 
+    // 🔹 Error handling
     if ($response === false) {
         echo "CURL ERROR: " . curl_error($ch);
         exit();
@@ -51,6 +61,7 @@ foreach ($tapArray as $tapData) {
     curl_close($ch);
 }
 
-echo "SUCCESS";
+// 🔹 Final response (important for frontend)
+echo "Data saved successfully";
 
 ?>
