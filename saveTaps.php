@@ -30,7 +30,7 @@ foreach ($tapArray as $tapData) {
             "end_time" => ["integerValue" => $endTime],
             "duration" => ["integerValue" => $duration],
             "interface" => ["stringValue" => $interface],
-            "timestamp" => ["integerValue" => $timestamp],
+            "timestamp" => ["integerValue" => $timestamp]
         ]
     ];
 
