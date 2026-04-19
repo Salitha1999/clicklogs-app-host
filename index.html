@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="index.css">
 
-<!-- Firebase -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -47,7 +46,6 @@ window.saveDependentVariable = function(dVariable){
 
 async function syncToServer(){
 
-    // Show saving message
     document.getElementById("counter").innerHTML = "Saving data...";
 
     for (let i = 0; i < tapLogsArray.length; i++) {
@@ -66,9 +64,8 @@ async function syncToServer(){
         });
     }
 
-    // ✅ FINAL SUCCESS MESSAGE
     document.getElementById("container").innerHTML =
-        "<h2 style='color:green;'>Data saved successfully ✅</h2>";
+        "<h2 style='color:green;'>Data saved successfully...</h2>";
 }
 
 window.tapityTap = function(tep){
