@@ -1,24 +1,26 @@
 <?php
 
-// 🔹 Firebase project details
+//  Firebase project details
 $project_id = "clicklogs-project-adb";
+
+// API Key
 $api_key = "AIzaSyA0BDyqvbDWf37srcfMSISWPzT1HAn9vSw";
 
-// 🔹 Get POST data
+//  Get POST data
 $session_id = $_POST['id'];
 $device = $_POST['var'];
 $taps = $_POST['taps'];
 
-// 🔹 Decode tap data
+//  Decode tap data
 $tapArray = json_decode($taps);
 
-// 🔹 Firestore collection URL
+//  Firestore collection URL
 $url = "https://firestore.googleapis.com/v1/projects/$project_id/databases/(default)/documents/tap_logs?key=$api_key";
 
-// 🔹 Current timestamp
+//  Current timestamp
 $timestamp = time();
 
-// 🔹 Loop through taps
+//  Loop through taps
 foreach ($tapArray as $tapData) {
 
     $tapSequence = $tapData->tapSequenceNumber;
@@ -28,7 +30,7 @@ foreach ($tapArray as $tapData) {
 
     $duration = $endTime - $startTime;
 
-    // 🔹 Firestore format
+    //  Firestore format
     $data = [
         "fields" => [
             "session_id" => ["stringValue" => $session_id],
@@ -42,7 +44,7 @@ foreach ($tapArray as $tapData) {
         ]
     ];
 
-    // 🔹 Send request
+    //  Send request
     $ch = curl_init($url);
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -52,7 +54,7 @@ foreach ($tapArray as $tapData) {
 
     $response = curl_exec($ch);
 
-    // 🔹 Error handling
+    //  Error handling
     if ($response === false) {
         echo "CURL ERROR: " . curl_error($ch);
         exit();
@@ -61,7 +63,7 @@ foreach ($tapArray as $tapData) {
     curl_close($ch);
 }
 
-// 🔹 Final response (important for frontend)
+//  Final response
 echo "Data saved successfully";
 
 ?>
